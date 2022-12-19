@@ -25,6 +25,25 @@ int query(vector<int> &tree, int lt, int ht, int l, int h, int index)
     return query(tree, lt, mid, l, h, 2 * index + 1) + query(tree, mid + 1, ht, l, h, 2 * index + 2);
 }
 
+// point update
+void update(vector<int>& tree,int l,int h,int i,int x,int index){
+    // out of range
+    if(l>h) return;
+    if(l==h){
+        tree[index]=x;
+        return;
+    }
+    int mid=(l+h)/2;
+    if(i<=mid){
+        update(tree,l,mid,i,x,2*index+1);
+    }else{
+        update(tree,mid+1,h,i,x,2*index+2);
+    }
+    // update on return 
+    tree[index]=tree[2*index+1]+tree[2*index+2];
+}
+
+
 int main()
 {
     int arr[] = {11, 22, 110, 13, 21, 20, 41, 5, 4, 12};
@@ -42,10 +61,21 @@ int main()
     cin >> q;
     while (q--)
     {
-        int l, r;
-        cin >> l >> r;
-        int ans = query(tree, 0, n - 1, l, r, 0);
-        cout << "sum of range " << l << " to " << r << " is " << ans << "\n";
+        int type;
+        cin>>type;
+        if(type==1){
+            // 1 is for finding sum only
+            int l,r;
+            cin >> l >> r;
+            int ans = query(tree, 0, n - 1, l, r, 0);
+            cout << "sum of range " << l << " to " << r << " is " << ans << "\n";
+        }else{
+            // 2 is for update and then sum
+            int index,x;
+            cin>> index>>x;
+            update(tree,0,n-1,index,x,0);
+              
+        }
     }
     return 0;
 }
